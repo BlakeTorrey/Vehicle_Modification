@@ -266,7 +266,6 @@ class Cli {
             new Wheel(answers.rearWheelDiameter, answers.rearWheelBrand),
           ]
         )
-        motorbike.Wheelie();
         // TODO: push the motorbike to the vehicles array
         this.vehicles.push(motorbike);
         // TODO: set the selectedVehicleVin to the vin of the motorbike
@@ -278,14 +277,14 @@ class Cli {
 
   // method to find a vehicle to tow
   // TODO: add a parameter to accept a truck object
-  findVehicleToTow(vehicle: (Truck)): void {
+  findVehicleToTow(incoming: (Truck)): void {
     inquirer
       .prompt([
         {
           type: 'list',
           name: 'vehicleToTow',
           message: 'Select a vehicle to tow',
-          choices: this.vehicles.map((vehicle) => {
+          choices: this.vehicles.map((vehicle)  => {
             return {
               name: `${vehicle.vin} -- ${vehicle.make} ${vehicle.model}`,
               value: vehicle,
@@ -294,12 +293,13 @@ class Cli {
         },
       ])
       .then((answers) => {
-        if (answers.value instanceof Truck) {
-          console.log(`Trucks cannot tow itself.`);
+        if (answers.vehicleToTow instanceof Truck) {
+          console.log(`Trucks cannot tow themselves.`);
           this.performActions();
         } else {
-          const vehicleToTow = answers.value;
-          vehicle.tow(vehicleToTow);
+          console.log('truck')
+          const vehicleToTow = answers.vehicleToTow;
+          incoming.tow(vehicleToTow);
           this.performActions();
         }
         // TODO: check if the selected vehicle is the truck
@@ -401,7 +401,7 @@ class Cli {
               const truck = this.vehicles[i] as Truck;
               this.findVehicleToTow(truck);
               return;
-            } else {
+            } else if (this.vehicles[i].vin === this.selectedVehicleVin && !(this.vehicles[i] instanceof Truck)){
               console.log(`Only truck's are capable of towing.`)
             }
           }
@@ -412,7 +412,7 @@ class Cli {
             if (this.vehicles[i].vin === this.selectedVehicleVin && this.vehicles[i] instanceof Motorbike) {
               const motorbike = this.vehicles[i] as Motorbike;
               motorbike.Wheelie();
-            } else {
+            } else if (this.vehicles[i].vin === this.selectedVehicleVin && !(this.vehicles[i] instanceof Motorbike)) {
               console.log(`This vehicle is not a motorcycle, it would be a bad idea to do a wheelie.`);
             }
           }
