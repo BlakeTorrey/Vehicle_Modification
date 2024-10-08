@@ -297,7 +297,6 @@ class Cli {
           console.log(`Trucks cannot tow themselves.`);
           this.performActions();
         } else {
-          console.log('truck')
           const vehicleToTow = answers.vehicleToTow;
           incoming.tow(vehicleToTow);
           this.performActions();
